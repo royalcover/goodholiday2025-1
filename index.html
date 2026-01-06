@@ -7,37 +7,46 @@
     <style>
         :root { --red: #D32F2F; --dark-red: #8B0000; --gold: #FFD700; --light-gold: #FFF9C4; --white: #FFFFFF; }
         body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: radial-gradient(circle at center, #b71c1c 0%, #310000 100%); margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
+        
+        /* 容器與佈局調整 */
         .container { width: 100%; max-width: 400px; background: var(--white); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); overflow: hidden; border: 4px solid var(--gold); display: flex; flex-direction: column; position: relative; }
-        .header { background: var(--dark-red); color: var(--gold); padding: 12px; text-align: center; }
+        .header { background: var(--dark-red); color: var(--gold); padding: 12px; text-align: center; flex-shrink: 0; }
         .header h1 { margin: 0; font-size: 20px; letter-spacing: 2px; }
-        .admin-zone { background: var(--light-gold); padding: 12px; margin: 10px; border-radius: 12px; border: 1px solid #e0c060; }
-        .input-row { display: flex; gap: 8px; margin-top: 8px; margin-bottom: 10px; }
+        
+        .admin-zone { background: var(--light-gold); padding: 10px; margin: 10px; border-radius: 12px; border: 1px solid #e0c060; flex-shrink: 0; }
+        .input-row { display: flex; gap: 8px; margin-top: 8px; }
+        
         input[id="pwdInput"], input[id="staffPwd"] { -webkit-text-security: disc; text-security: disc; }
         select, input { border: 2px solid #ccc; border-radius: 8px; padding: 10px; font-size: 14px; outline: none; background: white; box-sizing: border-box; width: 100%; }
-        .btn-add { width: 100%; background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 0 #550000; }
         
-        /* 展開式清單樣式 */
-        .history-panel { margin: 0 20px 10px; border: 2px solid #EEE; border-radius: 10px; overflow: hidden; }
+        .btn-add { width: 100%; background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 8px; box-shadow: 0 3px 0 #550000; }
+        
+        .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; flex-shrink: 0; }
+        .chance-num { font-size: 32px; color: var(--red); }
+
+        /* 轉盤區 - 調整尺寸避免重疊 */
+        .wheel-container { position: relative; width: 260px; height: 260px; margin: 5px auto; flex-shrink: 0; }
+        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 40px solid #FFEA00; z-index: 100; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4)); }
+        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--dark-red); transition: transform 5s cubic-bezier(0.15, 0, 0.2, 1); background: #fff; }
+
+        /* 中獎清單 - 增加間距 */
+        .history-panel { margin: 10px 20px; border: 2px solid #EEE; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
         .history-header { background: #F5F5F5; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: bold; color: #555; }
-        .history-content { display: none; background: #FFF; padding: 10px; max-height: 150px; overflow-y: auto; }
-        .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; color: #333; }
+        .history-content { display: none; background: #FFF; padding: 10px; max-height: 120px; overflow-y: auto; }
+        .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; }
         .history-badge { background: var(--red); color: white; border-radius: 10px; padding: 2px 8px; font-size: 12px; }
 
-        .promo-rule { background: #FFFDE7; border: 2px dashed #FFB300; padding: 8px; margin: 10px 20px 0; border-radius: 10px; text-align: center; color: var(--dark-red); font-weight: bold; font-size: 15px; }
-        .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; }
-        .chance-num { font-size: 32px; color: var(--red); }
-        .wheel-container { position: relative; width: 280px; height: 280px; margin: 10px auto; }
-        .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 40px solid #FFEA00; z-index: 100; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4)); }
-        #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 8px solid var(--dark-red); transition: transform 5s cubic-bezier(0.15, 0, 0.2, 1); background: #fff; }
+        .action-zone { padding: 0 20px 15px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .btn-draw { width: 100%; padding: 12px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; border: none; }
+        .single-draw { background: linear-gradient(to bottom, #f44336, #b71c1c); color: white; box-shadow: 0 4px 0 #7f0000; }
+        .multi-draw { background: linear-gradient(to bottom, #FFD700, #FBC02D); color: #330000; box-shadow: 0 4px 0 #a08000; }
+        .btn-checkout { background: #4CAF50 !important; color: white !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         
-        .action-zone { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
-        .btn-draw { width: 100%; padding: 15px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; border: none; }
-        .single-draw { background: linear-gradient(to bottom, #f44336, #b71c1c); color: white; box-shadow: 0 5px 0 #7f0000; }
-        .multi-draw { background: linear-gradient(to bottom, #FFD700, #FBC02D); color: #330000; box-shadow: 0 5px 0 #a08000; }
-        .btn-checkout { background: #4CAF50 !important; color: white !important; box-shadow: 0 5px 0 #2E7D32 !important; }
-        
-        .result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; color: white; padding: 20px; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; }
-        .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; }
+        /* 彈窗調整 */
+        .result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; color: white; padding: 15px; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; }
+        .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; box-sizing: border-box; }
+        .final-item { font-size: 18px; font-weight: bold; color: var(--red); padding: 6px 0; border-bottom: 1px dashed #DDD; }
+        .pos-input { border: 2px solid #4CAF50 !important; background: #E8F5E9 !important; font-weight: bold; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -51,7 +60,7 @@
 
     <div class="admin-zone">
         <select id="storeSelect">
-            <option value="">請選擇門市...</option>
+            <option value="">選擇門市...</option>
             <option value="苗栗店">苗栗店</option><option value="竹北店">竹北店</option>
             <option value="大甲店">大甲店</option><option value="西屯店">西屯店</option>
             <option value="崇德店">崇德店</option><option value="向上店">向上店</option>
@@ -61,8 +70,8 @@
             <option value="金門店">金門店</option>
         </select>
         <div class="input-row">
-            <input type="number" id="amtInput" placeholder="金額" inputmode="numeric">
-            <input type="tel" id="pwdInput" placeholder="密碼 888">
+            <input type="number" id="amtInput" placeholder="消費金額" inputmode="numeric">
+            <input type="tel" id="pwdInput" placeholder="管理密碼">
         </div>
         <button class="btn-add" onclick="addChance()">存入次數</button>
     </div>
@@ -71,30 +80,32 @@
 
     <div class="wheel-container"><div class="pointer"></div><canvas id="wheelCanvas" width="300" height="300"></canvas></div>
 
-    <div class="history-panel" id="historyPanel">
+    <div class="history-panel">
         <div class="history-header" onclick="toggleHistory()">
             <span>🎁 已獲得獎項清單</span>
             <span class="history-badge" id="historyCount">0</span>
         </div>
         <div class="history-content" id="historyList">
-            <div style="text-align:center; color:#AAA; padding:10px;">尚無中獎紀錄</div>
+            <div style="text-align:center; color:#AAA; padding:10px;">尚未抽獎</div>
         </div>
     </div>
 
     <div class="action-zone">
         <button id="drawBtn" class="btn-draw single-draw" onclick="startSpin(false)" disabled>單次抽取</button>
         <button id="multiBtn" class="btn-draw multi-draw" onclick="startSpin(true)" disabled>全部抽取 (梭哈)</button>
-        <button id="checkoutBtn" class="btn-draw btn-checkout" onclick="showOverlay()" style="display:none;">結算並核銷</button>
+        <button id="checkoutBtn" class="btn-draw btn-checkout" onclick="showOverlay()" style="display:none;">核銷領獎</button>
     </div>
 
     <div id="resultOverlay" class="result-overlay">
         <div class="result-card">
-            <h2 style="color:var(--dark-red); margin-top:0;">🏮 最終領獎確認 🏮</h2>
-            <div id="finalPrizeList" style="margin: 15px 0; border: 1px solid #EEE; padding: 10px; border-radius: 8px;"></div>
-            <button onclick="copyToClipboard()" style="background:#4CAF50; color:white; border:none; padding:12px; width:100%; border-radius:8px; margin-bottom:10px; font-weight:bold;">📋 複製 POS 明細</button>
-            <input type="tel" id="staffPwd" placeholder="請輸入核銷密碼" style="width:100%; padding:12px; margin-bottom:10px; border:2px solid #D32F2F; border-radius:8px; text-align:center;">
-            <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size:18px;">✅ 確定送出(核銷)</button>
-            <button onclick="document.getElementById('resultOverlay').style.display='none'" style="background:none; border:none; color:#888; margin-top:15px; text-decoration:underline;">回抽獎頁面</button>
+            <h2 style="color:var(--dark-red); margin:0 0 10px 0;">🏮 核銷與對帳 🏮</h2>
+            <div id="finalPrizeList" style="margin-bottom: 15px; border: 1px solid #EEE; padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto;"></div>
+            
+            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號" title="必填：用於核對銷帳紀錄">
+            <input type="tel" id="staffPwd" placeholder="核銷密碼 888" style="width:100%; padding:12px; margin-bottom:12px; border:2px solid #D32F2F; border-radius:8px; text-align:center;">
+            
+            <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size:18px;">✅ 確認送出並同步</button>
+            <button onclick="document.getElementById('resultOverlay').style.display='none'" style="background:none; border:none; color:#888; margin-top:10px; text-decoration:underline;">回抽獎頁</button>
         </div>
     </div>
 </div>
@@ -140,20 +151,13 @@
         const listDiv = document.getElementById('historyList');
         const countBadge = document.getElementById('historyCount');
         countBadge.innerText = accumulatedPrizes.length;
-
         if (accumulatedPrizes.length === 0) {
-            listDiv.innerHTML = '<div style="text-align:center; color:#AAA; padding:10px;">尚無中獎紀錄</div>';
+            listDiv.innerHTML = '<div style="text-align:center; color:#AAA; padding:10px;">尚未抽獎</div>';
             return;
         }
-
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
-        listDiv.innerHTML = Object.entries(counts).map(([n, v]) => `
-            <div class="history-item">
-                <span>${n}</span>
-                <span style="font-weight:bold; color:var(--red);">x ${v}</span>
-            </div>
-        `).join('');
+        listDiv.innerHTML = Object.entries(counts).map(([n, v]) => `<div class="history-item"><span>${n}</span><span style="font-weight:bold; color:var(--red);">x ${v}</span></div>`).join('');
     }
 
     function drawWheel() {
@@ -182,7 +186,6 @@
         localStorage.setItem('hjz_chances', chances);
         updateUI();
         document.getElementById('pwdInput').value = "";
-        document.getElementById('storeTitle').innerHTML = `<h1>🏮 好傢在${s} 🏮</h1>`;
     }
 
     function startSpin(isMulti) {
@@ -190,11 +193,9 @@
         isSpinning = true; updateUI();
         const sndSpin = document.getElementById('sndSpin');
         sndSpin.currentTime = 0; sndSpin.play().catch(()=>{});
-
         const count = isMulti ? chances : 1;
         const totalW = prizes.reduce((s, p) => s + p.w, 0);
-        let hasBigWin = false, lastWinIdx = 0;
-
+        let lastWinIdx = 0, hasBigWin = false;
         for(let j=0; j<count; j++) {
             let r = Math.random() * totalW;
             let currentWinIdx = 0;
@@ -203,12 +204,10 @@
             if(prizes[currentWinIdx].big) hasBigWin = true;
             lastWinIdx = currentWinIdx;
         }
-
         const arcDeg = 360 / prizes.length;
         const targetRotation = (360 - (lastWinIdx * arcDeg)) - (arcDeg / 2);
         currentRotation += (3600 + targetRotation - (currentRotation % 360));
         canvas.style.transform = `rotate(${currentRotation}deg)`;
-
         setTimeout(() => {
             isSpinning = false; chances -= count;
             localStorage.setItem('hjz_chances', chances);
@@ -216,29 +215,27 @@
             sndSpin.pause();
             if(hasBigWin) document.getElementById('sndBigWin').play().catch(()=>{});
             else document.getElementById('sndWin').play().catch(()=>{});
-            
-            updateHistoryUI();
-            updateUI();
+            updateHistoryUI(); updateUI();
             if (chances === 0) showOverlay();
         }, isMulti ? 500 : 5000);
     }
 
     function showOverlay() {
-        if (accumulatedPrizes.length === 0) return alert("尚未中獎");
         document.getElementById('resultOverlay').style.display = 'flex';
         const finalDiv = document.getElementById('finalPrizeList');
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
-        finalDiv.innerHTML = Object.entries(counts).map(([n, v]) => `
-            <div style="font-size:18px; margin:5px 0; color:var(--dark-red); font-weight:bold;">${n} x ${v}</div>
-        `).join('');
+        finalDiv.innerHTML = Object.entries(counts).map(([n, v]) => `<div class="final-item">${n} x ${v}</div>`).join('');
     }
 
     async function finalVerify() {
-        if (document.getElementById('staffPwd').value !== STAFF_PASSWORD) return alert("密碼錯誤！");
+        const posNo = document.getElementById('posNoInput').value;
+        const pwd = document.getElementById('staffPwd').value;
+        if (!posNo) return alert("請輸入 POS 交易單號以供核對！");
+        if (pwd !== STAFF_PASSWORD) return alert("核銷密碼錯誤！");
+        
         const vBtn = document.getElementById('verifyBtn');
         vBtn.innerText = "同步中..."; vBtn.disabled = true;
-        
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
@@ -249,7 +246,10 @@
                 mode: 'no-cors',
                 body: JSON.stringify({
                     t: new Date().toLocaleString('zh-TW', { hour12: false }),
-                    s: currentStore, p: detailStr, a: currentAmount, id: "HJ-" + Date.now().toString().slice(-6)
+                    s: currentStore, 
+                    p: detailStr, 
+                    a: currentAmount, 
+                    id: posNo // 將 ID 欄位替換為門市輸入的 POS 單號
                 })
             });
         } catch (e) {}
@@ -257,20 +257,13 @@
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
         document.getElementById('staffPwd').value = "";
-        vBtn.innerText = "✅ 核銷完成";
+        document.getElementById('posNoInput').value = "";
+        vBtn.innerText = "✅ 核銷成功";
         setTimeout(() => {
-            vBtn.innerText = "✅ 確認核銷同步"; vBtn.disabled = false;
+            vBtn.innerText = "✅ 確認送出並同步"; vBtn.disabled = false;
             document.getElementById('resultOverlay').style.display = 'none';
-            updateHistoryUI();
-            updateUI();
-        }, 1000);
-    }
-
-    function copyToClipboard() {
-        const counts = {};
-        accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
-        const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
-        navigator.clipboard.writeText(`【抽獎】${currentStore}|${detailStr}`).then(() => alert("已複製 POS 格式"));
+            updateHistoryUI(); updateUI();
+        }, 1200);
     }
 
     function updateUI() { 
