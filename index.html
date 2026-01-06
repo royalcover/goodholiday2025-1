@@ -14,6 +14,7 @@
         .input-row { display: flex; gap: 8px; margin-top: 8px; margin-bottom: 10px; }
         select, input { border: 2px solid #ccc; border-radius: 8px; padding: 10px; font-size: 14px; outline: none; background: white; box-sizing: border-box; width: 100%; }
         .btn-add { width: 100%; background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 4px 0 #550000; }
+        .btn-reset { width: 100%; background: none; border: none; color: #888; text-decoration: underline; font-size: 13px; margin-top: 10px; cursor: pointer; }
         .promo-rule { background: #FFFDE7; border: 2px dashed #FFB300; padding: 8px; margin: 10px 20px 0; border-radius: 10px; text-align: center; color: var(--dark-red); font-weight: bold; font-size: 15px; }
         .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; }
         .chance-num { font-size: 32px; color: var(--red); }
@@ -28,8 +29,24 @@
         .multi-draw { background: linear-gradient(to bottom, #FFD700, #FBC02D); color: #330000; box-shadow: 0 5px 0 #a08000; }
         .btn-draw:active:not(:disabled) { transform: translateY(3px); box-shadow: none; }
         .btn-draw:disabled { background: #dcdcdc !important; color: #888 !important; box-shadow: none !important; }
-        .result-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1000; color: white; padding: 20px; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; }
-        .result-card { background: var(--white); color: #333; width: 100%; border-radius: 15px; padding: 20px; text-align: center; }
+        
+        /* 強制核銷遮罩 */
+        .result-overlay { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100vw; height: 100vh; 
+            background: rgba(0,0,0,0.98); 
+            z-index: 9999; 
+            color: white; 
+            padding: 20px; 
+            box-sizing: border-box; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            pointer-events: auto;
+        }
+        .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; }
         .summary-item { font-size: 18px; margin: 8px 0; color: var(--dark-red); border-bottom: 1px solid #eee; padding-bottom: 4px; }
     </style>
 </head>
@@ -50,14 +67,14 @@
             <option value="金門店">金門店</option>
         </select>
         <div class="input-row">
-            <input type="number" id="amtInput" placeholder="消費金額" style="flex: 1.5; margin-right: 5px;">
-            <input type="password" id="pwdInput" placeholder="管理密碼" style="flex: 1;">
+            <input type="number" id="amtInput" placeholder="消費金額">
+            <input type="password" id="pwdInput" placeholder="管理密碼">
         </div>
         <button class="btn-add" onclick="addChance()">儲存抽獎次數</button>
+        <button class="btn-reset" onclick="resetChances()">金額輸入錯誤？點此重設次數</button>
     </div>
 
     <div class="promo-rule">🎊 當日單筆消費滿兩千可抽獎一次 🎊</div>
-
     <div class="chance-display">剩餘抽獎次數 <span class="chance-num" id="chanceCount">0</span></div>
 
     <div class="wheel-container">
@@ -77,16 +94,16 @@
     <div id="resultOverlay" class="result-overlay">
         <div class="result-card">
             <h2 style="color:var(--dark-red); margin-bottom: 5px;">🎊 待核銷獎項 🎊</h2>
-            <p style="font-size: 14px; color: #666;">請店員確認明細並輸入密碼核銷</p>
-            <div id="prizeDetails" style="max-height: 220px; overflow-y: auto; margin: 15px 0; font-weight: bold; border: 1px solid #eee; border-radius: 8px; padding: 10px;"></div>
+            <p style="font-size: 14px; color: #666;">請店員確認明細並核銷</p>
+            <div id="prizeDetails" style="max-height: 200px; overflow-y: auto; margin: 15px 0; font-weight: bold; border: 1px solid #eee; border-radius: 8px; padding: 10px;"></div>
             
-            <button onclick="copyToClipboard()" style="background:#4CAF50; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom: 15px;">📋 複製完整明細</button>
+            <button onclick="copyToClipboard()" style="background:#4CAF50; color:white; border:none; padding:12px; width:100%; border-radius:8px; font-weight:bold; cursor:pointer; margin-bottom: 15px;">📋 複製明細貼至 POS</button>
             
             <div style="border-top:2px dashed #ccc; padding-top:15px;">
-                <input type="password" id="staffPwd" placeholder="請輸入店員核銷密碼" style="width:100%; padding:12px; margin-bottom:10px; box-sizing: border-box; border: 2px solid var(--dark-red); border-radius: 8px; font-size: 16px;">
+                <input type="password" id="staffPwd" placeholder="請輸入核銷密碼" style="width:100%; padding:12px; margin-bottom:10px; box-sizing: border-box; border: 2px solid var(--dark-red); border-radius: 8px;">
                 <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size: 18px; cursor:pointer;">✅ 確認核銷並同步雲端</button>
             </div>
-            <p style="font-size: 12px; color: #999; margin-top: 10px;">(核銷完成前無法回到抽獎畫面)</p>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">(核銷完成前畫面將鎖定)</p>
         </div>
     </div>
 </div>
@@ -95,13 +112,13 @@
     const STAFF_PASSWORD = "888";
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyYDmtrRvKBVW-JM4v_ivN3IWZIJLg1E9BkjHVlELm5QpZVPYDHqv5TdbYZpJIjiIB7GQ/exec";
 
-    // 權重已大幅調低：大獎 0.1 / 中獎 0.5~2 / 安慰獎 5 / 壓縮毛巾 991.2
+    // 獎項權重：大幅調低大獎機率
     const prizes = [
         { n: "獨立筒床墊", w: 0.1, c: "#D32F2F" },     
         { n: "65吋電視", w: 0.1, c: "#FFD700" },       
         { n: "電動沙發", w: 0.1, c: "#D32F2F" },       
         { n: "石墨烯被胎", w: 1, c: "#FFD700" },     
-        { n: "熱敷按摩眼眼罩", w: 2, c: "#D32F2F" },   
+        { n: "熱敷按摩眼罩", w: 2, c: "#D32F2F" },   
         { n: "5cm記憶床墊", w: 0.5, c: "#FFD700" },     
         { n: "舒適毛毯", w: 5, c: "#D32F2F" },      
         { n: "壓縮毛巾", w: 991.2, c: "#D32F2F" }      
@@ -119,10 +136,16 @@
             document.getElementById('storeSelect').value = currentStore;
             document.getElementById('storeTitle').innerHTML = `<h1>🏮 好傢在${currentStore} 🏮</h1>`;
         }
+        
+        // 強制檢查是否有未核銷獎項
+        const savedPrizes = localStorage.getItem('hjz_accumulated');
+        if (savedPrizes && JSON.parse(savedPrizes).length > 0) {
+            accumulatedPrizes = JSON.parse(savedPrizes);
+            showOverlay();
+        }
+
         updateUI();
         drawWheel();
-        // 如果重新整理後發現還有未核銷獎項，強制顯示遮罩
-        if(accumulatedPrizes.length > 0) showOverlay();
     }
 
     function drawWheel() {
@@ -154,7 +177,17 @@
         chances += Math.floor(a / 2000);
         updateUI(); 
         localStorage.setItem('hjz_chances', chances);
-        alert(`已存入抽獎機會！`);
+        alert(`已存入 ${Math.floor(a / 2000)} 次機會！`);
+    }
+
+    function resetChances() {
+        if (document.getElementById('pwdInput').value !== STAFF_PASSWORD) return alert("請輸入管理密碼以重設");
+        if (confirm("確定要將剩餘次數歸零重新輸入嗎？")) {
+            chances = 0;
+            localStorage.setItem('hjz_chances', 0);
+            updateUI();
+            alert("次數已重設。");
+        }
     }
 
     function startSpin(isMulti) {
@@ -185,8 +218,6 @@
             updateUI();
             localStorage.setItem('hjz_chances', chances);
             localStorage.setItem('hjz_accumulated', JSON.stringify(accumulatedPrizes));
-            
-            // 抽完獎立刻強制進入核銷畫面
             showOverlay();
         }, isMulti ? 500 : 5000);
     }
@@ -203,7 +234,7 @@
         if (document.getElementById('staffPwd').value !== STAFF_PASSWORD) return alert("核銷密碼錯誤！");
         
         const vBtn = document.getElementById('verifyBtn');
-        vBtn.innerText = "資料傳輸中...";
+        vBtn.innerText = "傳輸中...";
         vBtn.disabled = true;
 
         const counts = {};
@@ -212,7 +243,6 @@
         const verifyId = "HJ-" + Date.now().toString().slice(-6);
 
         try {
-            // 使用 fetch 發送到 GAS
             await fetch(GAS_URL, {
                 method: "POST",
                 mode: 'no-cors',
@@ -225,39 +255,32 @@
                     id: verifyId
                 })
             });
-        } catch (e) { console.error("雲端同步失敗:", e); }
+        } catch (e) { console.error(e); }
 
-        // 成功後的收尾
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
         localStorage.removeItem('hjz_last_amt');
-        document.getElementById('staffPwd').value = ""; // 清空密碼欄位
+        document.getElementById('staffPwd').value = ""; 
         
         vBtn.innerText = "✅ 確認核銷並同步雲端";
         vBtn.disabled = false;
-        
         document.getElementById('resultOverlay').style.display = 'none';
-        alert("核銷成功！資料已同步至 Google 表格。");
+        alert("核銷完成，資料已同步至雲端表格！");
         updateUI();
     }
 
     function copyToClipboard() {
-        if (!currentStore) { alert("請先選擇門市"); return; }
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n} x ${v}`).join('\n');
         const text = `【好傢在抽獎紀錄】\n門市:${currentStore}\n核銷ID:${Date.now().toString().slice(-6)}\n明細:\n${detailStr}`;
-        navigator.clipboard.writeText(text).then(() => alert("明細已複製，請貼至 POS 備註。"));
+        navigator.clipboard.writeText(text).then(() => alert("明細已複製"));
     }
 
     function updateUI() { 
         document.getElementById('chanceCount').innerText = chances;
         document.getElementById('drawBtn').disabled = document.getElementById('multiBtn').disabled = (chances <= 0 || isSpinning);
-        if (chances > 0) {
-            document.getElementById('livePrize').innerText = "點擊下方開始";
-        } else if (accumulatedPrizes.length === 0) {
-            document.getElementById('livePrize').innerText = "次數已用完";
-        }
+        document.getElementById('livePrize').innerText = chances > 0 ? "點擊下方開始" : (accumulatedPrizes.length > 0 ? "等待核銷中" : "次數已用完");
     }
 
     initUI();
