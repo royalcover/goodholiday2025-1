@@ -115,15 +115,15 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyYDmtrRvKBVW-JM4v_ivN3IWZIJLg1E9BkjHVlELm5QpZVPYDHqv5TdbYZpJIjiIB7GQ/exec";
 
     const prizes = [
-        { n: "獨立筒床墊", w: 0.1, c: "#D32F2F", big: true },
-        { n: "65吋電視", w: 0.1, c: "#FFD700", big: true },
-        { n: "電動沙發", w: 0.1, c: "#D32F2F", big: true },
-        { n: "石墨烯被胎", w: 5, c: "#FFD700" },
-        { n: "熱敷按摩眼罩", w: 10, c: "#D32F2F" },
-        { n: "5cm記憶床墊", w: 2, c: "#FFD700" },
-        { n: "舒適毛毯", w: 50, c: "#D32F2F" },
-        { n: "壓縮毛巾", w: 932.7, c: "#D32F2F" }
-    ];
+    { n: "獨立筒床墊", w: 15, c: "#D32F2F", big: true },
+    { n: "65吋電視", w: 2, c: "#FFD700", big: true },
+    { n: "電動沙發", w: 4, c: "#D32F2F", big: true },
+    { n: "石墨烯被胎", w: 30, c: "#FFD700" },
+    { n: "熱敷按摩眼罩", w: 30, c: "#D32F2F" },
+    { n: "5cm記憶床墊", w: 20, c: "#FFD700" },
+    { n: "舒適毛毯", w: 500, c: "#D32F2F" },
+    { n: "壓縮毛巾", w: 10000, c: "#D32F2F" }
+];
 
     let chances = parseInt(localStorage.getItem('hjz_chances')) || 0;
     let accumulatedPrizes = JSON.parse(localStorage.getItem('hjz_accumulated')) || [];
@@ -275,3 +275,4 @@
 </script>
 </body>
 </html>
+
