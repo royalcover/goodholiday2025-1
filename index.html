@@ -95,14 +95,14 @@
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyYDmtrRvKBVW-JM4v_ivN3IWZIJLg1E9BkjHVlELm5QpZVPYDHqv5TdbYZpJIjiIB7GQ/exec";
 
     const prizes = [
-        { n: "獨立筒床墊", w: 1, c: "#D32F2F" },     
-        { n: "65吋電視", w: 1, c: "#FFD700" },       
-        { n: "電動沙發", w: 1, c: "#D32F2F" },       
-        { n: "石墨烯被胎", w: 10, c: "#FFD700" },     
-        { n: "熱敷按摩眼罩", w: 20, c: "#D32F2F" },   
-        { n: "5cm記憶床墊", w: 5, c: "#FFD700" },     
-        { n: "舒適毛毯", w: 33, c: "#D32F2F" },      
-        { n: "壓縮毛巾", w: 929, c: "#D32F2F" }      
+        { n: "獨立筒床墊", w: 0.1, c: "#D32F2F" },     
+        { n: "65吋電視", w: 0.1, c: "#FFD700" },       
+        { n: "電動沙發", w: 0.1, c: "#D32F2F" },       
+        { n: "石墨烯被胎", w: 1, c: "#FFD700" },     
+        { n: "熱敷按摩眼罩", w: 2, c: "#D32F2F" },   
+        { n: "5cm記憶床墊", w: 0.5, c: "#FFD700" },     
+        { n: "舒適毛毯", w: 5, c: "#D32F2F" },      
+        { n: "壓縮毛巾", w: 991.2, c: "#D32F2F" } // 剩餘份數湊齊 1000
     ];
 
     let chances = parseInt(localStorage.getItem('hjz_chances')) || 0;
@@ -262,3 +262,4 @@
 </script>
 </body>
 </html>
+
