@@ -11,39 +11,57 @@
         .container { width: 100%; max-width: 400px; background: var(--white); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); overflow: hidden; border: 4px solid var(--gold); display: flex; flex-direction: column; position: relative; }
         .header { background: var(--dark-red); color: var(--gold); padding: 12px; text-align: center; flex-shrink: 0; }
         .header h1 { margin: 0; font-size: 20px; letter-spacing: 2px; }
+
+        .prize-board { 
+            background: linear-gradient(135deg, #d32f2f 0%, #8b0000 100%); 
+            color: var(--gold); 
+            padding: 10px; 
+            margin: 10px 15px 0; 
+            border-radius: 15px; 
+            border: 2px solid var(--gold); 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 8px; 
+            box-shadow: inset 0 0 10px rgba(255, 215, 0, 0.3);
+        }
+        .board-title { grid-column: span 2; text-align: center; font-weight: bold; font-size: 13px; border-bottom: 1px dashed rgba(255, 215, 0, 0.4); padding-bottom: 4px; }
+        .board-item { display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: rgba(255, 255, 255, 0.1); border-radius: 6px; }
+        .board-label { font-size: 12px; font-weight: bold; }
+        .board-qty { font-weight: 900; font-size: 16px; color: #FFF; }
         
         .admin-zone { background: var(--light-gold); padding: 10px; margin: 10px; border-radius: 12px; border: 1px solid #e0c060; flex-shrink: 0; }
         .input-row { display: flex; gap: 8px; margin-top: 8px; }
         
-        input[id="pwdInput"], input[id="staffPwd"] { -webkit-text-security: disc; text-security: disc; }
+        input[type="password"] { font-family: password; letter-spacing: 2px; }
         select, input { border: 2px solid #ccc; border-radius: 8px; padding: 10px; font-size: 14px; outline: none; background: white; box-sizing: border-box; width: 100%; }
         
-        .btn-add { background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 3px 0 #550000; }
-        .btn-clear { background: #666; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 3px 0 #333; }
+        .btn-add { background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 3px 0 #550000; }
+        .btn-clear { background: #666; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; box-shadow: 0 3px 0 #333; }
         
-        .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; flex-shrink: 0; }
+        .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; }
         .chance-num { font-size: 32px; color: var(--red); }
 
         .wheel-container { position: relative; width: 260px; height: 260px; margin: 5px auto; flex-shrink: 0; }
         .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 40px solid #FFEA00; z-index: 100; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4)); }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--dark-red); transition: transform 5s cubic-bezier(0.15, 0, 0.2, 1); background: #fff; }
 
-        .history-panel { margin: 10px 20px; border: 2px solid #EEE; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
+        .history-panel { margin: 10px 20px; border: 2px solid #EEE; border-radius: 10px; overflow: hidden; }
         .history-header { background: #F5F5F5; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: bold; color: #555; }
         .history-content { display: none; background: #FFF; padding: 10px; max-height: 120px; overflow-y: auto; }
         .history-item { display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #F0F0F0; font-size: 14px; }
         .history-badge { background: var(--red); color: white; border-radius: 10px; padding: 2px 8px; font-size: 12px; }
 
-        .action-zone { padding: 0 20px 15px; display: flex; flex-direction: column; gap: 8px; flex-shrink: 0; }
+        .action-zone { padding: 0 20px 15px; display: flex; flex-direction: column; gap: 8px; }
         .btn-draw { width: 100%; padding: 12px; border-radius: 50px; font-size: 18px; font-weight: bold; cursor: pointer; border: none; }
         .single-draw { background: linear-gradient(to bottom, #f44336, #b71c1c); color: white; box-shadow: 0 4px 0 #7f0000; }
         .multi-draw { background: linear-gradient(to bottom, #FFD700, #FBC02D); color: #330000; box-shadow: 0 4px 0 #a08000; }
         .btn-checkout { background: #4CAF50 !important; color: white !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         
+        .admin-link { text-align: center; font-size: 12px; color: #BBB; margin-top: 10px; cursor: pointer; text-decoration: underline; }
+
         .result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; color: white; padding: 15px; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; }
-        .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; box-sizing: border-box; }
+        .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; }
         .final-item { font-size: 18px; font-weight: bold; color: var(--red); padding: 6px 0; border-bottom: 1px dashed #DDD; }
-        .pos-input { border: 2px solid #4CAF50 !important; background: #E8F5E9 !important; font-weight: bold; text-align: center; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -54,6 +72,14 @@
 
 <div class="container">
     <div id="storeTitle" class="header"><h1>🏮 好傢在年終慶 🏮</h1></div>
+
+    <div class="prize-board">
+        <div class="board-title">🏮 獎項看板 🏮</div>
+        <div class="board-item"><span class="board-label">電視</span><span class="board-qty">2</span></div>
+        <div class="board-item"><span class="board-label">床墊</span><span class="board-qty">15</span></div>
+        <div class="board-item"><span class="board-label">沙發</span><span class="board-qty">4</span></div>
+        <div class="board-item"><span class="board-label">被胎</span><span class="board-qty">30</span></div>
+    </div>
 
     <div class="admin-zone">
         <select id="storeSelect">
@@ -68,11 +94,11 @@
         </select>
         <div class="input-row">
             <input type="number" id="amtInput" placeholder="消費金額" inputmode="numeric">
-            <input type="tel" id="pwdInput" placeholder="管理密碼">
+            <input type="password" id="pwdInput" placeholder="門市密碼">
         </div>
         <div class="input-row">
             <button class="btn-add" style="flex: 2;" onclick="addChance()">存入次數</button>
-            <button class="btn-clear" style="flex: 1;" onclick="clearChances()">清除重設</button>
+            <button class="btn-clear" style="flex: 1;" onclick="resetForm()">清除輸入</button>
         </div>
     </div>
 
@@ -82,49 +108,48 @@
 
     <div class="history-panel">
         <div class="history-header" onclick="toggleHistory()">
-            <span>🎁 已獲得獎項清單</span>
+            <span>🎁 已獲獎清單</span>
             <span class="history-badge" id="historyCount">0</span>
         </div>
-        <div class="history-content" id="historyList">
-            <div style="text-align:center; color:#AAA; padding:10px;">尚未抽獎</div>
-        </div>
+        <div class="history-content" id="historyList"></div>
     </div>
 
     <div class="action-zone">
         <button id="drawBtn" class="btn-draw single-draw" onclick="startSpin(false)" disabled>單次抽取</button>
-        <button id="multiBtn" class="btn-draw multi-draw" onclick="startSpin(true)" disabled>全部抽取 (梭哈)</button>
+        <button id="multiBtn" class="btn-draw multi-draw" onclick="startSpin(true)" disabled>全部抽取</button>
         <button id="checkoutBtn" class="btn-draw btn-checkout" onclick="showOverlay()" style="display:none;">核銷領獎</button>
+        <div class="admin-link" onclick="sysMasterReset()">管理後台 </div>
     </div>
 
     <div id="resultOverlay" class="result-overlay">
         <div class="result-card">
-            <h2 style="color:var(--dark-red); margin:0 0 10px 0;">🏮 核銷與對帳 🏮</h2>
-            <div id="finalPrizeList" style="margin-bottom: 15px; border: 1px solid #EEE; padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto;"></div>
-            
-            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號 (例: 00123)">
-            <input type="tel" id="staffPwd" placeholder="核銷密碼 888" style="width:100%; padding:12px; margin-bottom:12px; border:2px solid #D32F2F; border-radius:8px; text-align:center;">
-            
-            <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size:18px;">✅ 確認送出並同步</button>
-            <button onclick="document.getElementById('resultOverlay').style.display='none'" style="background:none; border:none; color:#888; margin-top:10px; text-decoration:underline;">回抽獎頁</button>
+            <h2 style="color:var(--dark-red); margin:0 0 10px 0;">🏮 核銷領獎 🏮</h2>
+            <div id="finalPrizeList" style="margin-bottom: 15px; max-height: 150px; overflow-y: auto;"></div>
+            <input type="text" id="posNoInput" style="border:2px solid #4CAF50; text-align:center; padding:10px; width:100%; border-radius:8px; margin-bottom:10px;" placeholder="POS 單號">
+            <input type="password" id="staffPwd" placeholder="請輸入核銷密碼" style="width:100%; padding:10px; margin-bottom:10px; text-align:center; border:2px solid #D32F2F; border-radius:8px;">
+            <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold;">✅ 確認送出</button>
+            <button onclick="document.getElementById('resultOverlay').style.display='none'" style="background:none; border:none; color:#888; margin-top:10px; text-decoration:underline;">返回</button>
         </div>
     </div>
 </div>
 
 <script>
     const STAFF_PASSWORD = "888";
+    const MASTER_PASSWORD = "0915";
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyYDmtrRvKBVW-JM4v_ivN3IWZIJLg1E9BkjHVlELm5QpZVPYDHqv5TdbYZpJIjiIB7GQ/exec";
 
-    const prizes = [
-        { n: "獨立筒床墊", w: 5, c: "#D32F2F", big: true },
-        { n: "65吋電視", w: 1, c: "#FFD700", big: true },
-        { n: "電動沙發", w: 2, c: "#D32F2F", big: true },
-        { n: "石墨烯被胎", w: 10, c: "#FFD700" },
-        { n: "熱敷按摩眼罩", w: 10, c: "#D32F2F" },
-        { n: "5cm記憶床墊", w: 10, c: "#FFD700" },
-        { n: "舒適毛毯", w: 200, c: "#D32F2F" },
-        { n: "壓縮毛巾", w: 9762, c: "#D32F2F" }
+    const initialPrizes = [
+        { id: 0, n: "獨立筒床墊", w: 5, qty: 15, c: "#D32F2F", big: true },
+        { id: 1, n: "65吋電視", w: 1, qty: 2, c: "#FFD700", big: true },
+        { id: 2, n: "電動沙發", w: 2, qty: 4, c: "#D32F2F", big: true },
+        { id: 3, n: "石墨烯被胎", w: 10, qty: 30, c: "#FFD700" },
+        { id: 4, n: "熱敷按摩眼罩", w: 10, qty: 30, c: "#D32F2F" },
+        { id: 5, n: "5cm記憶床墊", w: 10, qty: 20, c: "#FFD700" },
+        { id: 6, n: "舒適毛毯", w: 200, qty: 500, c: "#D32F2F" },
+        { id: 7, n: "壓縮毛巾", w: 9762, qty: 10000, c: "#D32F2F" }
     ];
 
+    let prizes = JSON.parse(localStorage.getItem('hjz_prizes')) || JSON.parse(JSON.stringify(initialPrizes));
     let chances = parseInt(localStorage.getItem('hjz_chances')) || 0;
     let accumulatedPrizes = JSON.parse(localStorage.getItem('hjz_accumulated')) || [];
     let currentStore = localStorage.getItem('hjz_store') || ""; 
@@ -137,9 +162,26 @@
             document.getElementById('storeSelect').value = currentStore;
             document.getElementById('storeTitle').innerHTML = `<h1>🏮 好傢在${currentStore} 🏮</h1>`;
         }
-        updateUI();
-        drawWheel();
-        updateHistoryUI();
+        updateUI(); drawWheel(); updateHistoryUI();
+    }
+
+    function resetForm() {
+        document.getElementById('amtInput').value = "";
+        document.getElementById('pwdInput').value = "";
+        alert("已清除輸入內容");
+    }
+
+    // ⭐ 後台重設：直接清空 LocalStorage 並重整頁面，恢復到最初狀態
+    function sysMasterReset() {
+        const p = prompt("請輸入管理後台密碼：");
+        if (p === MASTER_PASSWORD) {
+            if (confirm("【管理者提醒】這將恢復初始庫存量並清空所有測試紀錄。確定嗎？")) {
+                localStorage.clear();
+                location.reload();
+            }
+        } else if (p !== null) {
+            alert("密碼錯誤！");
+        }
     }
 
     function toggleHistory() {
@@ -175,73 +217,68 @@
         });
     }
 
-    function addChance() {
-        const s = document.getElementById('storeSelect').value;
-        const a = document.getElementById('amtInput').value;
-        const p = document.getElementById('pwdInput').value;
-        if (!s) return alert("請先選擇門市");
-        if (!a || a < 2000) return alert("請輸入正確金額 (滿 2000 抽一次)");
-        if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤");
-        currentStore = s; 
-        currentAmount = a;
-        localStorage.setItem('hjz_store', s); 
-        localStorage.setItem('hjz_last_amt', a);
-        const newChances = Math.floor(a / 2000);
-        chances += newChances;
-        localStorage.setItem('hjz_chances', chances);
-        updateUI();
-        document.getElementById('pwdInput').value = "";
-        alert(`成功存入 ${newChances} 次，目前剩餘 ${chances} 次`);
-    }
-
-    function clearChances() {
-        const p = document.getElementById('pwdInput').value;
-        if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤，無法清除！");
-        if (confirm("確定要將剩餘次數歸零並重設嗎？")) {
-            chances = 0;
-            localStorage.setItem('hjz_chances', 0);
-            document.getElementById('amtInput').value = "";
-            document.getElementById('pwdInput').value = "";
-            updateUI();
-            alert("次數已清除，請重新輸入。");
-        }
-    }
-
     function startSpin(isMulti) {
         if (chances <= 0 || isSpinning) return;
+        
+        // 核心機率計算：只有真實庫存 > 0 的才會中獎
+        const getAvailableTotalW = () => prizes.reduce((s, p) => (p.qty > 0 ? s + p.w : s), 0);
+        let totalW = getAvailableTotalW();
+        if (totalW <= 0) return alert("獎項已全數領完！");
+
         isSpinning = true; updateUI();
         const sndSpin = document.getElementById('sndSpin');
         sndSpin.currentTime = 0; sndSpin.play().catch(()=>{});
+        
         const count = isMulti ? chances : 1;
-        const totalW = prizes.reduce((s, p) => s + p.w, 0);
-        let lastWinIdx = 0, hasBigWin = false;
+        let lastWinIdx = 7; 
+        let hasBigWin = false;
+
         for(let j=0; j<count; j++) {
-            let r = Math.random() * totalW;
-            let currentWinIdx = 0;
+            let currentTotalW = getAvailableTotalW();
+            let r = Math.random() * currentTotalW;
+            let winIdx = 7;
             for(let i=0; i<prizes.length; i++) { 
-                if(r < prizes[i].w) { currentWinIdx = i; break; } 
-                r -= prizes[i].w; 
+                if (prizes[i].qty > 0) {
+                    if(r < prizes[i].w) { winIdx = i; break; } 
+                    r -= prizes[i].w; 
+                }
             }
-            accumulatedPrizes.push(prizes[currentWinIdx].n);
-            if(prizes[currentWinIdx].big) hasBigWin = true;
-            lastWinIdx = currentWinIdx;
+            prizes[winIdx].qty--;
+            accumulatedPrizes.push(prizes[winIdx].n);
+            if(prizes[winIdx].big) hasBigWin = true;
+            lastWinIdx = winIdx;
         }
+
         const arcDeg = 360 / prizes.length;
         const targetRotation = (360 - (lastWinIdx * arcDeg)) - (arcDeg / 2);
         currentRotation += (3600 + targetRotation - (currentRotation % 360));
         canvas.style.transform = `rotate(${currentRotation}deg)`;
+        
         setTimeout(() => {
             isSpinning = false; 
             chances -= count;
             localStorage.setItem('hjz_chances', chances);
             localStorage.setItem('hjz_accumulated', JSON.stringify(accumulatedPrizes));
+            localStorage.setItem('hjz_prizes', JSON.stringify(prizes));
             sndSpin.pause();
             if(hasBigWin) document.getElementById('sndBigWin').play().catch(()=>{});
             else document.getElementById('sndWin').play().catch(()=>{});
-            updateHistoryUI(); 
-            updateUI();
+            updateHistoryUI(); updateUI();
             if (chances === 0) showOverlay();
         }, isMulti ? 500 : 5000);
+    }
+
+    function addChance() {
+        const s = document.getElementById('storeSelect').value;
+        const a = document.getElementById('amtInput').value;
+        const p = document.getElementById('pwdInput').value;
+        if (!s || !a || a < 2000 || p !== STAFF_PASSWORD) return alert("資訊錯誤或密碼不正確");
+        currentStore = s; currentAmount = a;
+        localStorage.setItem('hjz_store', s); localStorage.setItem('hjz_last_amt', a);
+        chances += Math.floor(a / 2000);
+        localStorage.setItem('hjz_chances', chances);
+        document.getElementById('pwdInput').value = "";
+        updateUI();
     }
 
     function showOverlay() {
@@ -255,44 +292,26 @@
     async function finalVerify() {
         const posNo = document.getElementById('posNoInput').value;
         const pwd = document.getElementById('staffPwd').value;
-        if (!posNo) return alert("請輸入 POS 交易單號！");
-        if (pwd !== STAFF_PASSWORD) return alert("核銷密碼錯誤！");
-        
+        if (!posNo || pwd !== STAFF_PASSWORD) return alert("單號或密碼錯誤");
         const vBtn = document.getElementById('verifyBtn');
         vBtn.innerText = "同步中..."; vBtn.disabled = true;
-
+        
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
-        const verifyCode = "HJ-" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         try {
             await fetch(GAS_URL, {
-                method: "POST",
-                mode: 'no-cors',
+                method: "POST", mode: 'no-cors',
                 body: JSON.stringify({
-                    t: new Date().toLocaleString('zh-TW', { hour12: false }),
-                    s: currentStore, 
-                    p: detailStr, 
-                    a: currentAmount, 
-                    id: verifyCode, 
-                    pos: "'" + posNo // ⭐ 強制加上單引號，確保試算表保留 00
+                    t: new Date().toLocaleString(), s: currentStore, p: detailStr, a: currentAmount, pos: "'" + posNo
                 })
             });
-        } catch (e) {
-            console.error("同步失敗:", e);
-        }
-
+        } catch (e) {}
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
-        document.getElementById('staffPwd').value = "";
-        document.getElementById('posNoInput').value = "";
         vBtn.innerText = "✅ 核銷成功";
-        setTimeout(() => {
-            vBtn.innerText = "✅ 確認送出並同步"; vBtn.disabled = false;
-            document.getElementById('resultOverlay').style.display = 'none';
-            updateHistoryUI(); updateUI();
-        }, 1200);
+        setTimeout(() => { location.reload(); }, 1200);
     }
 
     function updateUI() { 
