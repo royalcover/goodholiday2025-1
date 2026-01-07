@@ -179,20 +179,16 @@
         const s = document.getElementById('storeSelect').value;
         const a = document.getElementById('amtInput').value;
         const p = document.getElementById('pwdInput').value;
-        
         if (!s) return alert("請先選擇門市");
         if (!a || a < 2000) return alert("請輸入正確金額 (滿 2000 抽一次)");
         if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤");
-
         currentStore = s; 
         currentAmount = a;
         localStorage.setItem('hjz_store', s); 
         localStorage.setItem('hjz_last_amt', a);
-        
         const newChances = Math.floor(a / 2000);
         chances += newChances;
         localStorage.setItem('hjz_chances', chances);
-        
         updateUI();
         document.getElementById('pwdInput').value = "";
         alert(`成功存入 ${newChances} 次，目前剩餘 ${chances} 次`);
@@ -201,7 +197,6 @@
     function clearChances() {
         const p = document.getElementById('pwdInput').value;
         if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤，無法清除！");
-        
         if (confirm("確定要將剩餘次數歸零並重設嗎？")) {
             chances = 0;
             localStorage.setItem('hjz_chances', 0);
@@ -217,11 +212,9 @@
         isSpinning = true; updateUI();
         const sndSpin = document.getElementById('sndSpin');
         sndSpin.currentTime = 0; sndSpin.play().catch(()=>{});
-        
         const count = isMulti ? chances : 1;
         const totalW = prizes.reduce((s, p) => s + p.w, 0);
         let lastWinIdx = 0, hasBigWin = false;
-        
         for(let j=0; j<count; j++) {
             let r = Math.random() * totalW;
             let currentWinIdx = 0;
@@ -233,12 +226,10 @@
             if(prizes[currentWinIdx].big) hasBigWin = true;
             lastWinIdx = currentWinIdx;
         }
-
         const arcDeg = 360 / prizes.length;
         const targetRotation = (360 - (lastWinIdx * arcDeg)) - (arcDeg / 2);
         currentRotation += (3600 + targetRotation - (currentRotation % 360));
         canvas.style.transform = `rotate(${currentRotation}deg)`;
-
         setTimeout(() => {
             isSpinning = false; 
             chances -= count;
@@ -262,7 +253,6 @@
     }
 
     async function finalVerify() {
-        // 直接取值不轉型，確保字串形式傳送 (含 00)
         const posNo = document.getElementById('posNoInput').value;
         const pwd = document.getElementById('staffPwd').value;
         if (!posNo) return alert("請輸入 POS 交易單號！");
@@ -282,7 +272,11 @@
                 mode: 'no-cors',
                 body: JSON.stringify({
                     t: new Date().toLocaleString('zh-TW', { hour12: false }),
-                    s: currentStore, p: detailStr, a: currentAmount, id: verifyCode, pos: posNo
+                    s: currentStore, 
+                    p: detailStr, 
+                    a: currentAmount, 
+                    id: verifyCode, 
+                    pos: "'" + posNo // ⭐ 強制加上單引號，確保試算表保留 00
                 })
             });
         } catch (e) {
