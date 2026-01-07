@@ -8,28 +8,27 @@
         :root { --red: #D32F2F; --dark-red: #8B0000; --gold: #FFD700; --light-gold: #FFF9C4; --white: #FFFFFF; }
         body { font-family: "PingFang TC", "Microsoft JhengHei", sans-serif; background: radial-gradient(circle at center, #b71c1c 0%, #310000 100%); margin: 0; padding: 10px; display: flex; justify-content: center; align-items: center; min-height: 100vh; box-sizing: border-box; }
         
-        /* 容器與佈局調整 */
         .container { width: 100%; max-width: 400px; background: var(--white); border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.6); overflow: hidden; border: 4px solid var(--gold); display: flex; flex-direction: column; position: relative; }
         .header { background: var(--dark-red); color: var(--gold); padding: 12px; text-align: center; flex-shrink: 0; }
         .header h1 { margin: 0; font-size: 20px; letter-spacing: 2px; }
         
+        /* 管理區塊佈局優化 */
         .admin-zone { background: var(--light-gold); padding: 10px; margin: 10px; border-radius: 12px; border: 1px solid #e0c060; flex-shrink: 0; }
         .input-row { display: flex; gap: 8px; margin-top: 8px; }
         
         input[id="pwdInput"], input[id="staffPwd"] { -webkit-text-security: disc; text-security: disc; }
         select, input { border: 2px solid #ccc; border-radius: 8px; padding: 10px; font-size: 14px; outline: none; background: white; box-sizing: border-box; width: 100%; }
         
-        .btn-add { width: 100%; background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; margin-top: 8px; box-shadow: 0 3px 0 #550000; }
+        .btn-add { background: var(--dark-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; box-shadow: 0 3px 0 #550000; }
+        .btn-clear { background: #666; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 14px; box-shadow: 0 3px 0 #333; }
         
         .chance-display { font-size: 16px; color: var(--dark-red); font-weight: bold; margin: 5px 0; text-align: center; flex-shrink: 0; }
         .chance-num { font-size: 32px; color: var(--red); }
 
-        /* 轉盤區 - 調整尺寸避免重疊 */
         .wheel-container { position: relative; width: 260px; height: 260px; margin: 5px auto; flex-shrink: 0; }
         .pointer { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 40px solid #FFEA00; z-index: 100; filter: drop-shadow(0 4px 2px rgba(0,0,0,0.4)); }
         #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; border: 6px solid var(--dark-red); transition: transform 5s cubic-bezier(0.15, 0, 0.2, 1); background: #fff; }
 
-        /* 中獎清單 - 增加間距 */
         .history-panel { margin: 10px 20px; border: 2px solid #EEE; border-radius: 10px; overflow: hidden; flex-shrink: 0; }
         .history-header { background: #F5F5F5; padding: 10px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; font-weight: bold; color: #555; }
         .history-content { display: none; background: #FFF; padding: 10px; max-height: 120px; overflow-y: auto; }
@@ -42,7 +41,6 @@
         .multi-draw { background: linear-gradient(to bottom, #FFD700, #FBC02D); color: #330000; box-shadow: 0 4px 0 #a08000; }
         .btn-checkout { background: #4CAF50 !important; color: white !important; box-shadow: 0 4px 0 #2E7D32 !important; }
         
-        /* 彈窗調整 */
         .result-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); z-index: 9999; color: white; padding: 15px; box-sizing: border-box; flex-direction: column; justify-content: center; align-items: center; }
         .result-card { background: var(--white); color: #333; width: 100%; max-width: 350px; border-radius: 15px; padding: 20px; text-align: center; box-sizing: border-box; }
         .final-item { font-size: 18px; font-weight: bold; color: var(--red); padding: 6px 0; border-bottom: 1px dashed #DDD; }
@@ -75,7 +73,7 @@
         </div>
         <div class="input-row">
             <button class="btn-add" style="flex: 2;" onclick="addChance()">存入次數</button>
-            <button onclick="clearChances()" style="flex: 1; background:#666; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px; box-shadow: 0 3px 0 #333;">清除重設</button>
+            <button class="btn-clear" style="flex: 1;" onclick="clearChances()">清除重設</button>
         </div>
     </div>
 
@@ -104,7 +102,7 @@
             <h2 style="color:var(--dark-red); margin:0 0 10px 0;">🏮 核銷與對帳 🏮</h2>
             <div id="finalPrizeList" style="margin-bottom: 15px; border: 1px solid #EEE; padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto;"></div>
             
-            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號" title="必填：用於核對銷帳紀錄">
+            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號">
             <input type="tel" id="staffPwd" placeholder="核銷密碼 888" style="width:100%; padding:12px; margin-bottom:12px; border:2px solid #D32F2F; border-radius:8px; text-align:center;">
             
             <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size:18px;">✅ 確認送出並同步</button>
@@ -117,16 +115,16 @@
     const STAFF_PASSWORD = "888";
     const GAS_URL = "https://script.google.com/macros/s/AKfycbyYDmtrRvKBVW-JM4v_ivN3IWZIJLg1E9BkjHVlELm5QpZVPYDHqv5TdbYZpJIjiIB7GQ/exec";
 
-   const prizes = [
-    { n: "獨立筒床墊", w: 5, c: "#D32F2F", big: true },
-    { n: "65吋電視", w: 1, c: "#FFD700", big: true },
-    { n: "電動沙發", w: 2, c: "#D32F2F", big: true },
-    { n: "石墨烯被胎", w: 10, c: "#FFD700" },
-    { n: "熱敷按摩眼罩", w: 10, c: "#D32F2F" },
-    { n: "5cm記憶床墊", w: 10, c: "#FFD700" },
-    { n: "舒適毛毯", w: 200, c: "#D32F2F" },
-    { n: "壓縮毛巾", w: 9762, c: "#D32F2F" }
-];
+    const prizes = [
+        { n: "獨立筒床墊", w: 5, c: "#D32F2F", big: true },
+        { n: "65吋電視", w: 1, c: "#FFD700", big: true },
+        { n: "電動沙發", w: 2, c: "#D32F2F", big: true },
+        { n: "石墨烯被胎", w: 10, c: "#FFD700" },
+        { n: "熱敷按摩眼眼罩", w: 10, c: "#D32F2F" },
+        { n: "5cm記憶床墊", w: 10, c: "#FFD700" },
+        { n: "舒適毛毯", w: 200, c: "#D32F2F" },
+        { n: "壓縮毛巾", w: 9762, c: "#D32F2F" }
+    ];
 
     let chances = parseInt(localStorage.getItem('hjz_chances')) || 0;
     let accumulatedPrizes = JSON.parse(localStorage.getItem('hjz_accumulated')) || [];
@@ -182,55 +180,76 @@
         const s = document.getElementById('storeSelect').value;
         const a = document.getElementById('amtInput').value;
         const p = document.getElementById('pwdInput').value;
-        if (!s || p !== STAFF_PASSWORD) return alert("密碼錯誤或門市未選");
-        currentStore = s; currentAmount = a;
-        localStorage.setItem('hjz_store', s); localStorage.setItem('hjz_last_amt', a);
-        chances += Math.floor(a / 2000);
+        
+        if (!s) return alert("請先選擇門市");
+        if (!a || a < 2000) return alert("請輸入正確金額 (滿 2000 抽一次)");
+        if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤");
+
+        currentStore = s; 
+        currentAmount = a;
+        localStorage.setItem('hjz_store', s); 
+        localStorage.setItem('hjz_last_amt', a);
+        
+        const newChances = Math.floor(a / 2000);
+        chances += newChances;
         localStorage.setItem('hjz_chances', chances);
+        
         updateUI();
         document.getElementById('pwdInput').value = "";
+        alert(`成功存入 ${newChances} 次，目前剩餘 ${chances} 次`);
     }
-function clearChances() {
-    const p = document.getElementById('pwdInput').value;
-    if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤，無法清除！");
-    
-    if (confirm("確定要清除所有剩餘次數並重新設定嗎？")) {
-        chances = 0;
-        localStorage.setItem('hjz_chances', 0);
-        document.getElementById('amtInput').value = "";
-        document.getElementById('pwdInput').value = "";
-        updateUI();
-        alert("次數已歸零，請重新輸入正確金額。");
+
+    function clearChances() {
+        const p = document.getElementById('pwdInput').value;
+        if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤，無法清除！");
+        
+        if (confirm("確定要將剩餘次數歸零並重設嗎？")) {
+            chances = 0;
+            localStorage.setItem('hjz_chances', 0);
+            document.getElementById('amtInput').value = "";
+            document.getElementById('pwdInput').value = "";
+            updateUI();
+            alert("次數已清除，請重新輸入。");
+        }
     }
-}
+
     function startSpin(isMulti) {
         if (chances <= 0 || isSpinning) return;
         isSpinning = true; updateUI();
         const sndSpin = document.getElementById('sndSpin');
         sndSpin.currentTime = 0; sndSpin.play().catch(()=>{});
+        
         const count = isMulti ? chances : 1;
         const totalW = prizes.reduce((s, p) => s + p.w, 0);
         let lastWinIdx = 0, hasBigWin = false;
+        
         for(let j=0; j<count; j++) {
             let r = Math.random() * totalW;
             let currentWinIdx = 0;
-            for(let i=0; i<prizes.length; i++) { if(r < prizes[i].w) { currentWinIdx = i; break; } r -= prizes[i].w; }
+            for(let i=0; i<prizes.length; i++) { 
+                if(r < prizes[i].w) { currentWinIdx = i; break; } 
+                r -= prizes[i].w; 
+            }
             accumulatedPrizes.push(prizes[currentWinIdx].n);
             if(prizes[currentWinIdx].big) hasBigWin = true;
             lastWinIdx = currentWinIdx;
         }
+
         const arcDeg = 360 / prizes.length;
         const targetRotation = (360 - (lastWinIdx * arcDeg)) - (arcDeg / 2);
         currentRotation += (3600 + targetRotation - (currentRotation % 360));
         canvas.style.transform = `rotate(${currentRotation}deg)`;
+
         setTimeout(() => {
-            isSpinning = false; chances -= count;
+            isSpinning = false; 
+            chances -= count;
             localStorage.setItem('hjz_chances', chances);
             localStorage.setItem('hjz_accumulated', JSON.stringify(accumulatedPrizes));
             sndSpin.pause();
             if(hasBigWin) document.getElementById('sndBigWin').play().catch(()=>{});
             else document.getElementById('sndWin').play().catch(()=>{});
-            updateHistoryUI(); updateUI();
+            updateHistoryUI(); 
+            updateUI();
             if (chances === 0) showOverlay();
         }, isMulti ? 500 : 5000);
     }
@@ -246,18 +265,15 @@ function clearChances() {
     async function finalVerify() {
         const posNo = document.getElementById('posNoInput').value;
         const pwd = document.getElementById('staffPwd').value;
-        if (!posNo) return alert("請輸入 POS 交易單號以供核對！");
+        if (!posNo) return alert("請輸入 POS 交易單號！");
         if (pwd !== STAFF_PASSWORD) return alert("核銷密碼錯誤！");
         
         const vBtn = document.getElementById('verifyBtn');
         vBtn.innerText = "同步中..."; vBtn.disabled = true;
 
-        // 計算獎項加總明細
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
-
-        // 生成隨機驗證碼 (HJ + 6位亂碼)
         const verifyCode = "HJ-" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         try {
@@ -265,19 +281,12 @@ function clearChances() {
                 method: "POST",
                 mode: 'no-cors',
                 body: JSON.stringify({
-                    t: new Date().toLocaleString('zh-TW', { hour12: false }), // 時間
-                    s: currentStore,      // 店名
-                    p: detailStr,         // 獎項明細
-                    a: currentAmount,     // 消費金額
-                    id: verifyCode,       // 驗證碼 (對應 GAS 的 data.id)
-                    pos: posNo            // POS單號 (對應 GAS 的 data.pos)
+                    t: new Date().toLocaleString('zh-TW', { hour12: false }),
+                    s: currentStore, p: detailStr, a: currentAmount, id: verifyCode, pos: posNo
                 })
             });
-        } catch (e) {
-            console.error("同步失敗:", e);
-        }
+        } catch (e) {}
 
-        // 清除狀態
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
         document.getElementById('staffPwd').value = "";
@@ -289,6 +298,7 @@ function clearChances() {
             updateHistoryUI(); updateUI();
         }, 1200);
     }
+
     function updateUI() { 
         document.getElementById('chanceCount').innerText = chances;
         document.getElementById('drawBtn').disabled = document.getElementById('multiBtn').disabled = (chances <= 0 || isSpinning);
@@ -298,7 +308,3 @@ function clearChances() {
 </script>
 </body>
 </html>
-
-
-
-
