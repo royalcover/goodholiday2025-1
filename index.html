@@ -98,7 +98,7 @@
         </div>
         <div class="input-row">
             <button class="btn-add" style="flex: 2;" onclick="addChance()">存入次數</button>
-            <button class="btn-clear" style="flex: 1;" onclick="resetForm()">清除輸入</button>
+            <button class="btn-clear" style="flex: 1;" onclick="resetForm()">清除內容</button>
         </div>
     </div>
 
@@ -118,7 +118,7 @@
         <button id="drawBtn" class="btn-draw single-draw" onclick="startSpin(false)" disabled>單次抽取</button>
         <button id="multiBtn" class="btn-draw multi-draw" onclick="startSpin(true)" disabled>全部抽取(梭哈)</button>
         <button id="checkoutBtn" class="btn-draw btn-checkout" onclick="showOverlay()" style="display:none;">核銷領獎</button>
-        <div class="admin-link" onclick="sysMasterReset()">管理後台 </div>
+        <div class="admin-link" onclick="sysMasterReset()">管理後台</div>
     </div>
 
     <div id="resultOverlay" class="result-overlay">
@@ -165,13 +165,25 @@
         updateUI(); drawWheel(); updateHistoryUI();
     }
 
+    // 🚀 更新後的清除功能：輸入 888 點擊清除，可連同剩餘次數一起歸零
     function resetForm() {
-        document.getElementById('amtInput').value = "";
-        document.getElementById('pwdInput').value = "";
-        alert("已清除輸入內容");
+        const p = document.getElementById('pwdInput').value;
+        if (p === STAFF_PASSWORD) {
+            if (confirm("確定要清除所有剩餘抽獎次數嗎？")) {
+                chances = 0;
+                localStorage.setItem('hjz_chances', 0);
+                document.getElementById('amtInput').value = "";
+                document.getElementById('pwdInput').value = "";
+                updateUI();
+                alert("輸入內容與剩餘次數已成功歸零");
+            }
+        } else {
+            document.getElementById('amtInput').value = "";
+            document.getElementById('pwdInput').value = "";
+            alert("輸入內容已清除 (如需歸零剩餘次數，請先輸入門市密碼)");
+        }
     }
 
-    // ⭐ 後台重設：直接清空 LocalStorage 並重整頁面，恢復到最初狀態
     function sysMasterReset() {
         const p = prompt("請輸入管理後台密碼：");
         if (p === MASTER_PASSWORD) {
@@ -219,20 +231,15 @@
 
     function startSpin(isMulti) {
         if (chances <= 0 || isSpinning) return;
-        
-        // 核心機率計算：只有真實庫存 > 0 的才會中獎
         const getAvailableTotalW = () => prizes.reduce((s, p) => (p.qty > 0 ? s + p.w : s), 0);
         let totalW = getAvailableTotalW();
         if (totalW <= 0) return alert("獎項已全數領完！");
-
         isSpinning = true; updateUI();
         const sndSpin = document.getElementById('sndSpin');
         sndSpin.currentTime = 0; sndSpin.play().catch(()=>{});
-        
         const count = isMulti ? chances : 1;
         let lastWinIdx = 7; 
         let hasBigWin = false;
-
         for(let j=0; j<count; j++) {
             let currentTotalW = getAvailableTotalW();
             let r = Math.random() * currentTotalW;
@@ -248,12 +255,10 @@
             if(prizes[winIdx].big) hasBigWin = true;
             lastWinIdx = winIdx;
         }
-
         const arcDeg = 360 / prizes.length;
         const targetRotation = (360 - (lastWinIdx * arcDeg)) - (arcDeg / 2);
         currentRotation += (3600 + targetRotation - (currentRotation % 360));
         canvas.style.transform = `rotate(${currentRotation}deg)`;
-        
         setTimeout(() => {
             isSpinning = false; 
             chances -= count;
@@ -295,11 +300,9 @@
         if (!posNo || pwd !== STAFF_PASSWORD) return alert("單號或密碼錯誤");
         const vBtn = document.getElementById('verifyBtn');
         vBtn.innerText = "同步中..."; vBtn.disabled = true;
-        
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
-
         try {
             await fetch(GAS_URL, {
                 method: "POST", mode: 'no-cors',
@@ -323,4 +326,3 @@
 </script>
 </body>
 </html>
-
