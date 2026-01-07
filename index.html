@@ -12,7 +12,6 @@
         .header { background: var(--dark-red); color: var(--gold); padding: 12px; text-align: center; flex-shrink: 0; }
         .header h1 { margin: 0; font-size: 20px; letter-spacing: 2px; }
         
-        /* 管理區塊佈局優化 */
         .admin-zone { background: var(--light-gold); padding: 10px; margin: 10px; border-radius: 12px; border: 1px solid #e0c060; flex-shrink: 0; }
         .input-row { display: flex; gap: 8px; margin-top: 8px; }
         
@@ -102,7 +101,7 @@
             <h2 style="color:var(--dark-red); margin:0 0 10px 0;">🏮 核銷與對帳 🏮</h2>
             <div id="finalPrizeList" style="margin-bottom: 15px; border: 1px solid #EEE; padding: 10px; border-radius: 8px; max-height: 150px; overflow-y: auto;"></div>
             
-            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號">
+            <input type="text" id="posNoInput" class="pos-input" placeholder="請輸入 POS 交易單號 (例: 00123)">
             <input type="tel" id="staffPwd" placeholder="核銷密碼 888" style="width:100%; padding:12px; margin-bottom:12px; border:2px solid #D32F2F; border-radius:8px; text-align:center;">
             
             <button id="verifyBtn" onclick="finalVerify()" style="background:var(--dark-red); color:white; padding:15px; width:100%; border-radius:8px; border:none; font-weight:bold; font-size:18px;">✅ 確認送出並同步</button>
@@ -120,7 +119,7 @@
         { n: "65吋電視", w: 1, c: "#FFD700", big: true },
         { n: "電動沙發", w: 2, c: "#D32F2F", big: true },
         { n: "石墨烯被胎", w: 10, c: "#FFD700" },
-        { n: "熱敷按摩眼眼罩", w: 10, c: "#D32F2F" },
+        { n: "熱敷按摩眼罩", w: 10, c: "#D32F2F" },
         { n: "5cm記憶床墊", w: 10, c: "#FFD700" },
         { n: "舒適毛毯", w: 200, c: "#D32F2F" },
         { n: "壓縮毛巾", w: 9762, c: "#D32F2F" }
@@ -263,6 +262,7 @@
     }
 
     async function finalVerify() {
+        // 直接取值不轉型，確保字串形式傳送 (含 00)
         const posNo = document.getElementById('posNoInput').value;
         const pwd = document.getElementById('staffPwd').value;
         if (!posNo) return alert("請輸入 POS 交易單號！");
@@ -285,7 +285,9 @@
                     s: currentStore, p: detailStr, a: currentAmount, id: verifyCode, pos: posNo
                 })
             });
-        } catch (e) {}
+        } catch (e) {
+            console.error("同步失敗:", e);
+        }
 
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
