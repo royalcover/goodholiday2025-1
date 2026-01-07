@@ -73,7 +73,10 @@
             <input type="number" id="amtInput" placeholder="消費金額" inputmode="numeric">
             <input type="tel" id="pwdInput" placeholder="管理密碼">
         </div>
-        <button class="btn-add" onclick="addChance()">存入次數</button>
+        <div class="input-row">
+            <button class="btn-add" style="flex: 2;" onclick="addChance()">存入次數</button>
+            <button onclick="clearChances()" style="flex: 1; background:#666; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:bold; font-size:14px; box-shadow: 0 3px 0 #333;">清除重設</button>
+        </div>
     </div>
 
     <div class="chance-display">剩餘次數 <span class="chance-num" id="chanceCount">0</span></div>
@@ -187,7 +190,19 @@
         updateUI();
         document.getElementById('pwdInput').value = "";
     }
-
+function clearChances() {
+    const p = document.getElementById('pwdInput').value;
+    if (p !== STAFF_PASSWORD) return alert("管理密碼錯誤，無法清除！");
+    
+    if (confirm("確定要清除所有剩餘次數並重新設定嗎？")) {
+        chances = 0;
+        localStorage.setItem('hjz_chances', 0);
+        document.getElementById('amtInput').value = "";
+        document.getElementById('pwdInput').value = "";
+        updateUI();
+        alert("次數已歸零，請重新輸入正確金額。");
+    }
+}
     function startSpin(isMulti) {
         if (chances <= 0 || isSpinning) return;
         isSpinning = true; updateUI();
@@ -283,6 +298,7 @@
 </script>
 </body>
 </html>
+
 
 
 
