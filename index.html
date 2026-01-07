@@ -236,24 +236,33 @@
         
         const vBtn = document.getElementById('verifyBtn');
         vBtn.innerText = "同步中..."; vBtn.disabled = true;
+
+        // 計算獎項加總明細
         const counts = {};
         accumulatedPrizes.forEach(p => counts[p] = (counts[p] || 0) + 1);
         const detailStr = Object.entries(counts).map(([n, v]) => `${n}x${v}`).join(', ');
+
+        // 生成隨機驗證碼 (HJ + 6位亂碼)
+        const verifyCode = "HJ-" + Math.random().toString(36).substr(2, 6).toUpperCase();
 
         try {
             await fetch(GAS_URL, {
                 method: "POST",
                 mode: 'no-cors',
                 body: JSON.stringify({
-                    t: new Date().toLocaleString('zh-TW', { hour12: false }),
-                    s: currentStore, 
-                    p: detailStr, 
-                    a: currentAmount, 
-                    id: posNo // 將 ID 欄位替換為門市輸入的 POS 單號
+                    t: new Date().toLocaleString('zh-TW', { hour12: false }), // 時間
+                    s: currentStore,      // 店名
+                    p: detailStr,         // 獎項明細
+                    a: currentAmount,     // 消費金額
+                    id: verifyCode,       // 驗證碼 (對應 GAS 的 data.id)
+                    pos: posNo            // POS單號 (對應 GAS 的 data.pos)
                 })
             });
-        } catch (e) {}
+        } catch (e) {
+            console.error("同步失敗:", e);
+        }
 
+        // 清除狀態
         accumulatedPrizes = [];
         localStorage.removeItem('hjz_accumulated');
         document.getElementById('staffPwd').value = "";
@@ -265,7 +274,6 @@
             updateHistoryUI(); updateUI();
         }, 1200);
     }
-
     function updateUI() { 
         document.getElementById('chanceCount').innerText = chances;
         document.getElementById('drawBtn').disabled = document.getElementById('multiBtn').disabled = (chances <= 0 || isSpinning);
@@ -275,5 +283,6 @@
 </script>
 </body>
 </html>
+
 
 
